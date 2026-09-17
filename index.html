@@ -50,6 +50,38 @@
     .sub-total-row { display:flex; justify-content:space-between; font-size:.9rem; margin-top:10px; color:var(--muted); }
     .pending-charge { color:var(--purple-dark); font-weight:700; }
 
+
+    .caption-art { min-height:420px; }
+    .caption-card { width:min(100%,470px); min-height:390px; padding:35px 28px; border-radius:38px; background:linear-gradient(145deg,#ffffff 0%,#f1edff 100%); border:1px solid #e4d9ff; box-shadow:var(--shadow); text-align:center; position:relative; overflow:hidden; }
+    .caption-card:before,.caption-card:after { content:""; position:absolute; border-radius:50%; border:1px dashed #c5b2ff; animation:spin 18s linear infinite; }
+    .caption-card:before { width:290px;height:290px;top:-150px;right:-130px; }
+    .caption-card:after { width:210px;height:210px;bottom:-120px;left:-110px;animation-direction:reverse; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .floating-cake { font-size:6rem; animation:bob 4s ease-in-out infinite; position:relative; z-index:1; }
+    .caption-badge { display:inline-block; padding:7px 13px; border-radius:999px; background:#fff; color:var(--purple-dark); font-size:.75rem; font-weight:800; position:relative; z-index:1; }
+    .animated-caption { font-size:2.8rem; line-height:1; margin:20px 0 12px; position:relative; z-index:1; animation:captionIn 1s ease both; }
+    .animated-caption span { color:var(--purple-dark); display:inline-block; animation:wordFloat 3s ease-in-out infinite; }
+    .animated-caption span:nth-child(2) { animation-delay:.5s; }
+    @keyframes captionIn { from {opacity:0;transform:translateY(20px)} to {opacity:1;transform:none} }
+    @keyframes wordFloat { 50% {transform:translateY(-4px)} }
+    .caption-line { color:var(--muted); font-size:.86rem; line-height:1.8; position:relative; z-index:1; }
+    .caption-chips { display:flex; flex-wrap:wrap; justify-content:center; gap:7px; margin-top:22px; position:relative; z-index:1; }
+    .caption-chips span { background:white; border:1px solid var(--line); border-radius:999px; padding:7px 10px; font-size:.68rem; font-weight:700; }
+    .review-section { background:linear-gradient(180deg,#fff,#f7f3ff); }
+    .review-layout { display:grid; grid-template-columns:.8fr 1.2fr; gap:22px; align-items:start; }
+    .review-summary,.review-form,.review-list { background:white; border:1px solid var(--line); border-radius:24px; padding:24px; box-shadow:0 8px 25px rgba(35,29,53,.04); }
+    .rating-big { font-family:"Baloo 2",cursive; font-size:4rem; color:var(--purple-dark); font-weight:800; line-height:1; }
+    .stars { color:#f3b83f; letter-spacing:3px; font-size:1.25rem; }
+    .review-item { border-bottom:1px solid var(--line); padding:15px 0; }
+    .review-meta { display:flex;justify-content:space-between;gap:10px;align-items:center; }
+    .review-meta strong { font-size:.9rem; }
+    .review-item p { color:var(--muted); font-size:.82rem; line-height:1.7; margin:7px 0 0; }
+    .star-picker { display:flex; flex-direction:row-reverse; justify-content:flex-end; gap:5px; margin:8px 0 16px; }
+    .star-picker input { display:none; }
+    .star-picker label { cursor:pointer; font-size:1.8rem; color:#d9d0ef; transition:.2s; }
+    .star-picker label:hover,.star-picker label:hover ~ label,.star-picker input:checked ~ label { color:#f3b83f; transform:scale(1.08); }
+    @media (max-width:850px) { .review-layout {grid-template-columns:1fr;} }
+
     .blob {
       position: absolute; border-radius: 50%; filter: blur(1px);
       background: rgba(174,143,255,.22); z-index: -1;
@@ -220,7 +252,7 @@
     <div class="nav-inner">
       <a href="#home" class="brand"><img src="assets/logo.png" alt="Take & Bite logo">Take & Bite</a>
       <nav class="nav-links">
-        <a href="#menu">Menu</a><a href="#why-us">Why us</a><a href="#contact">Contact</a>
+        <a href="#menu">Menu</a><a href="#why-us">Why us</a><a href="#reviews">Reviews</a><a href="#contact">Contact</a>
       </nav>
       <button class="cart-pill" onclick="openCart()">🛒 Cart <span id="cartCount">0</span></button>
     </div>
@@ -243,8 +275,14 @@
             <strong>🚚 Delivery:</strong> Location অনুযায়ী delivery charge vary করবে।
           </div>
         </div>
-        <div class="hero-art">
-          <img src="assets/menu-reference.png" alt="Take & Bite cake menu illustration">
+        <div class="hero-art caption-art">
+          <div class="caption-card">
+            <div class="floating-cake">🎂</div>
+            <div class="caption-badge">Freshly baked with 💜</div>
+            <h2 class="animated-caption"><span>Sweet</span> moments,<br><span>beautiful</span> memories.</h2>
+            <p class="caption-line">এক bite-এ happiness, প্রতিটি cake-এ ভালোবাসা।</p>
+            <div class="caption-chips"><span>✨ Fresh Taste</span><span>🎨 Custom Design</span><span>🚚 Easy Order</span></div>
+          </div>
         </div>
       </div>
     </section>
@@ -279,6 +317,18 @@
       </div>
     </section>
   </main>
+
+
+    <section class="section review-section" id="reviews">
+      <div class="container">
+        <div class="section-head"><div><h2>Customer Reviews ⭐</h2><p>আপনার experience share করুন এবং অন্যদেরও help করুন।</p></div><span class="eyebrow">Your feedback matters 💜</span></div>
+        <div class="review-layout">
+          <div class="review-summary"><div class="rating-big" id="averageRating">—</div><div class="stars" id="averageStars">☆☆☆☆☆</div><p style="color:var(--muted);font-size:.82rem" id="reviewCount">Based on 0 reviews</p><div class="delivery-box"><strong>💬 Review tip:</strong> Cake-এর taste, freshness, packaging এবং service নিয়ে honest feedback দিন।</div></div>
+          <div class="review-form"><h3>আপনার Review দিন</h3><form id="reviewForm" onsubmit="submitReview(event)"><div class="field"><label for="reviewName">Your name *</label><input id="reviewName" required placeholder="আপনার নাম"></div><div class="field" style="margin-top:12px"><label>Your rating *</label><div class="star-picker"><input id="star5" type="radio" name="rating" value="5" required><label for="star5">★</label><input id="star4" type="radio" name="rating" value="4"><label for="star4">★</label><input id="star3" type="radio" name="rating" value="3"><label for="star3">★</label><input id="star2" type="radio" name="rating" value="2"><label for="star2">★</label><input id="star1" type="radio" name="rating" value="1"><label for="star1">★</label></div></div><div class="field"><label for="reviewText">Your feedback *</label><textarea id="reviewText" required rows="3" placeholder="Cake কেমন লেগেছে?"></textarea></div><button class="btn btn-primary" style="margin-top:14px;width:100%" type="submit">Submit Review ⭐</button><p class="notice">Review এই browser-এ save হবে।</p></form></div>
+        </div>
+        <div class="review-list" style="margin-top:22px"><h3 style="font-size:1.7rem;margin-top:0">Recent Reviews</h3><div id="reviewList"></div></div>
+      </div>
+    </section>
 
   <footer class="footer" id="contact">
     <div class="container">
@@ -554,8 +604,35 @@
       }
     }
 
+
+    let reviews = JSON.parse(localStorage.getItem("takeBiteReviews") || "[]");
+    function stars(rating) { return "★".repeat(rating) + "☆".repeat(5-rating); }
+    function escapeHtml(value) { return String(value).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c])); }
+    function renderReviews() {
+      const list = document.getElementById("reviewList");
+      if (!reviews.length) list.innerHTML = '<div class="empty">এখনও কোনো customer review নেই। প্রথম review টি আপনিই দিন! 💜</div>';
+      else list.innerHTML = reviews.slice().reverse().map(r => `<div class="review-item"><div class="review-meta"><strong>${escapeHtml(r.name)}</strong><span class="stars">${stars(r.rating)}</span></div><p>${escapeHtml(r.text)}</p></div>`).join("");
+      const avg = reviews.length ? reviews.reduce((sum,r)=>sum+r.rating,0)/reviews.length : 0;
+      document.getElementById("averageRating").textContent = reviews.length ? avg.toFixed(1) : "—";
+      document.getElementById("averageStars").textContent = reviews.length ? stars(Math.round(avg)) : "☆☆☆☆☆";
+      document.getElementById("reviewCount").textContent = `Based on ${reviews.length} review${reviews.length===1?"":"s"}`;
+    }
+    function submitReview(event) {
+      event.preventDefault();
+      const rating = Number(document.querySelector('input[name="rating"]:checked')?.value || 0);
+      const name = document.getElementById("reviewName").value.trim();
+      const text = document.getElementById("reviewText").value.trim();
+      if (!rating || !name || !text) return showToast("Please complete your review.");
+      reviews.push({name, rating, text});
+      localStorage.setItem("takeBiteReviews", JSON.stringify(reviews));
+      renderReviews();
+      document.getElementById("reviewForm").reset();
+      showToast("Thank you for your review! 💜");
+    }
+
     document.getElementById("deliveryDate").min = getMinimumOrderDate();
     toggleDeliveryFields();
+    renderReviews();
     renderProducts();
     updateCartCount();
   </script>
