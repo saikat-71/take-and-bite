@@ -51,3 +51,6 @@
 - Home delivery charge varies by location and is marked for confirmation.
 - Custom cake designs are possible; extra design/decorations may increase the final price.
 - A vanilla full cake reference image is included at `assets/vanilla-full-reference.jpg`.
+
+- Hero menu-reference image replaced with animated captions.
+- Customer rating and review section added using browser local storage.
