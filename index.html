@@ -51,36 +51,30 @@
     .pending-charge { color:var(--purple-dark); font-weight:700; }
 
 
-    .caption-art { min-height:420px; }
-    .caption-card { width:min(100%,470px); min-height:390px; padding:35px 28px; border-radius:38px; background:linear-gradient(145deg,#ffffff 0%,#f1edff 100%); border:1px solid #e4d9ff; box-shadow:var(--shadow); text-align:center; position:relative; overflow:hidden; }
-    .caption-card:before,.caption-card:after { content:""; position:absolute; border-radius:50%; border:1px dashed #c5b2ff; animation:spin 18s linear infinite; }
-    .caption-card:before { width:290px;height:290px;top:-150px;right:-130px; }
-    .caption-card:after { width:210px;height:210px;bottom:-120px;left:-110px;animation-direction:reverse; }
-    @keyframes spin { to { transform:rotate(360deg); } }
-    .floating-cake { font-size:6rem; animation:bob 4s ease-in-out infinite; position:relative; z-index:1; }
-    .caption-badge { display:inline-block; padding:7px 13px; border-radius:999px; background:#fff; color:var(--purple-dark); font-size:.75rem; font-weight:800; position:relative; z-index:1; }
-    .animated-caption { font-size:2.8rem; line-height:1; margin:20px 0 12px; position:relative; z-index:1; animation:captionIn 1s ease both; }
-    .animated-caption span { color:var(--purple-dark); display:inline-block; animation:wordFloat 3s ease-in-out infinite; }
-    .animated-caption span:nth-child(2) { animation-delay:.5s; }
-    @keyframes captionIn { from {opacity:0;transform:translateY(20px)} to {opacity:1;transform:none} }
-    @keyframes wordFloat { 50% {transform:translateY(-4px)} }
-    .caption-line { color:var(--muted); font-size:.86rem; line-height:1.8; position:relative; z-index:1; }
-    .caption-chips { display:flex; flex-wrap:wrap; justify-content:center; gap:7px; margin-top:22px; position:relative; z-index:1; }
-    .caption-chips span { background:white; border:1px solid var(--line); border-radius:999px; padding:7px 10px; font-size:.68rem; font-weight:700; }
-    .review-section { background:linear-gradient(180deg,#fff,#f7f3ff); }
-    .review-layout { display:grid; grid-template-columns:.8fr 1.2fr; gap:22px; align-items:start; }
-    .review-summary,.review-form,.review-list { background:white; border:1px solid var(--line); border-radius:24px; padding:24px; box-shadow:0 8px 25px rgba(35,29,53,.04); }
-    .rating-big { font-family:"Baloo 2",cursive; font-size:4rem; color:var(--purple-dark); font-weight:800; line-height:1; }
-    .stars { color:#f3b83f; letter-spacing:3px; font-size:1.25rem; }
-    .review-item { border-bottom:1px solid var(--line); padding:15px 0; }
-    .review-meta { display:flex;justify-content:space-between;gap:10px;align-items:center; }
-    .review-meta strong { font-size:.9rem; }
-    .review-item p { color:var(--muted); font-size:.82rem; line-height:1.7; margin:7px 0 0; }
-    .star-picker { display:flex; flex-direction:row-reverse; justify-content:flex-end; gap:5px; margin:8px 0 16px; }
-    .star-picker input { display:none; }
-    .star-picker label { cursor:pointer; font-size:1.8rem; color:#d9d0ef; transition:.2s; }
-    .star-picker label:hover,.star-picker label:hover ~ label,.star-picker input:checked ~ label { color:#f3b83f; transform:scale(1.08); }
-    @media (max-width:850px) { .review-layout {grid-template-columns:1fr;} }
+    .hero-copy-art{position:relative;min-height:410px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:30px;border-radius:42px;background:linear-gradient(145deg,#fff,#f2edff);border:1px solid var(--line);overflow:hidden;box-shadow:var(--shadow)}
+    .hero-copy-art:before,.hero-copy-art:after{content:"✦";position:absolute;color:var(--purple-dark);font-size:2rem;animation:sparkle 3s ease-in-out infinite}
+    .hero-copy-art:before{top:35px;left:45px}.hero-copy-art:after{right:45px;bottom:35px;animation-delay:1.3s}
+    .caption-kicker{color:var(--purple-dark);font-size:.85rem;font-weight:800;letter-spacing:1px;animation:riseIn .9s ease both}
+    .caption-title{margin:14px 0 8px;font-size:clamp(2.3rem,5vw,4.4rem);line-height:.95;animation:riseIn 1s .2s ease both}
+    .caption-title span{color:var(--purple-dark)}
+    .caption-subtitle{max-width:350px;color:var(--muted);font-size:.9rem;line-height:1.8;animation:riseIn 1s .4s ease both}
+    .caption-badges{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:18px;animation:riseIn 1s .6s ease both}
+    .caption-badges span{padding:8px 12px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:.72rem;font-weight:700;animation:badgeFloat 4s ease-in-out infinite}
+    .caption-badges span:nth-child(2){animation-delay:.7s}.caption-badges span:nth-child(3){animation-delay:1.4s}
+    @keyframes sparkle{0%,100%{opacity:.25;transform:scale(.8) rotate(0)}50%{opacity:1;transform:scale(1.25) rotate(180deg)}}
+    @keyframes riseIn{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes badgeFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+    .product-photo{width:100%;height:180px;object-fit:cover;border-radius:20px;border:1px solid #f0eaff}
+
+
+    .welcome-backdrop{position:fixed;inset:0;z-index:120;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(35,29,53,.62);backdrop-filter:blur(8px)}
+    .welcome-backdrop.hidden{display:none}
+    .welcome-card{width:min(470px,100%);position:relative;text-align:center;padding:38px 28px 30px;border-radius:30px;background:linear-gradient(145deg,#fff,#f2edff);border:1px solid var(--line);box-shadow:0 25px 80px rgba(0,0,0,.25)}
+    .welcome-card h2{font-size:2.6rem;line-height:1;margin:16px 0 10px}.welcome-card h2 span{color:var(--purple-dark)}
+    .welcome-card p{color:var(--muted);font-size:.88rem;line-height:1.8;margin:0 auto 20px}
+    .welcome-note{display:inline-block;background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 13px;color:var(--purple-dark);font-size:.72rem;font-weight:800}
+    .welcome-close{position:absolute;top:13px;right:13px;width:34px;height:34px;border:0;border-radius:50%;background:var(--purple-soft);font-size:1.1rem}
+    .welcome-sparkles{color:var(--purple-dark);font-size:1.3rem;letter-spacing:8px}
 
     .blob {
       position: absolute; border-radius: 50%; filter: blur(1px);
@@ -252,7 +246,7 @@
     <div class="nav-inner">
       <a href="#home" class="brand"><img src="assets/logo.png" alt="Take & Bite logo">Take & Bite</a>
       <nav class="nav-links">
-        <a href="#menu">Menu</a><a href="#why-us">Why us</a><a href="#reviews">Reviews</a><a href="#contact">Contact</a>
+        <a href="#menu">Menu</a><a href="#why-us">Why us</a><a href="#contact">Contact</a>
       </nav>
       <button class="cart-pill" onclick="openCart()">🛒 Cart <span id="cartCount">0</span></button>
     </div>
@@ -275,14 +269,11 @@
             <strong>🚚 Delivery:</strong> Location অনুযায়ী delivery charge vary করবে।
           </div>
         </div>
-        <div class="hero-art caption-art">
-          <div class="caption-card">
-            <div class="floating-cake">🎂</div>
-            <div class="caption-badge">Freshly baked with 💜</div>
-            <h2 class="animated-caption"><span>Sweet</span> moments,<br><span>beautiful</span> memories.</h2>
-            <p class="caption-line">এক bite-এ happiness, প্রতিটি cake-এ ভালোবাসা।</p>
-            <div class="caption-chips"><span>✨ Fresh Taste</span><span>🎨 Custom Design</span><span>🚚 Easy Order</span></div>
-          </div>
+        <div class="hero-copy-art">
+          <div class="caption-kicker">A little sweetness, a lot of love ✨</div>
+          <h2 class="caption-title">Made Fresh.<br><span>Served Happy.</span></h2>
+          <p class="caption-subtitle">প্রতিটি bite-এ থাকুক ভালোবাসা। আপনার special day হোক আরও sweet with Take & Bite.</p>
+          <div class="caption-badges"><span>Fresh Cakes</span><span>Custom Designs</span><span>Easy Ordering</span></div>
         </div>
       </div>
     </section>
@@ -317,18 +308,6 @@
       </div>
     </section>
   </main>
-
-
-    <section class="section review-section" id="reviews">
-      <div class="container">
-        <div class="section-head"><div><h2>Customer Reviews ⭐</h2><p>আপনার experience share করুন এবং অন্যদেরও help করুন।</p></div><span class="eyebrow">Your feedback matters 💜</span></div>
-        <div class="review-layout">
-          <div class="review-summary"><div class="rating-big" id="averageRating">—</div><div class="stars" id="averageStars">☆☆☆☆☆</div><p style="color:var(--muted);font-size:.82rem" id="reviewCount">Based on 0 reviews</p><div class="delivery-box"><strong>💬 Review tip:</strong> Cake-এর taste, freshness, packaging এবং service নিয়ে honest feedback দিন।</div></div>
-          <div class="review-form"><h3>আপনার Review দিন</h3><form id="reviewForm" onsubmit="submitReview(event)"><div class="field"><label for="reviewName">Your name *</label><input id="reviewName" required placeholder="আপনার নাম"></div><div class="field" style="margin-top:12px"><label>Your rating *</label><div class="star-picker"><input id="star5" type="radio" name="rating" value="5" required><label for="star5">★</label><input id="star4" type="radio" name="rating" value="4"><label for="star4">★</label><input id="star3" type="radio" name="rating" value="3"><label for="star3">★</label><input id="star2" type="radio" name="rating" value="2"><label for="star2">★</label><input id="star1" type="radio" name="rating" value="1"><label for="star1">★</label></div></div><div class="field"><label for="reviewText">Your feedback *</label><textarea id="reviewText" required rows="3" placeholder="Cake কেমন লেগেছে?"></textarea></div><button class="btn btn-primary" style="margin-top:14px;width:100%" type="submit">Submit Review ⭐</button><p class="notice">Review এই browser-এ save হবে।</p></form></div>
-        </div>
-        <div class="review-list" style="margin-top:22px"><h3 style="font-size:1.7rem;margin-top:0">Recent Reviews</h3><div id="reviewList"></div></div>
-      </div>
-    </section>
 
   <footer class="footer" id="contact">
     <div class="container">
@@ -365,6 +344,18 @@
       </div>
     </div>
   </footer>
+
+
+  <div class="welcome-backdrop" id="welcomePopup" role="dialog" aria-modal="true" aria-label="Welcome message">
+    <div class="welcome-card">
+      <button class="welcome-close" onclick="closeWelcome()" aria-label="Close welcome message">×</button>
+      <div class="welcome-sparkles">✦ ✧ ✦</div>
+      <div class="welcome-note">WELCOME TO TAKE & BITE</div>
+      <h2>Hi, Sweet Soul!<br><span>Welcome to our bakery</span></h2>
+      <p>আপনার special moments আরও sweet করতে আমরা ready। Fresh cakes, custom designs এবং delicious bites—সবকিছু একসাথে।</p>
+      <button class="btn btn-primary" onclick="closeWelcome()">Let's Explore Cakes →</button>
+    </div>
+  </div>
 
   <div class="modal-backdrop" id="cartModal">
     <div class="modal">
@@ -403,23 +394,23 @@
     const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxcVgOmJ6H4aD0TFdT82_fhQxH3zNgRRNkqkeCAY14pA82sJO1Y5QuggkRuJ76ZHhx4/exec";
 
     const products = [
-      {id:"cake-vanilla-half", category:"cake", name:"Vanilla Cake", size:"Half Pound", price:300, emoji:"🍰", desc:"Soft & fluffy vanilla cake—ছোট celebration, birthday বা sweet craving-এর জন্য perfect।"},
-      {id:"cake-vanilla-full", category:"cake", name:"Vanilla Cake", size:"Full Pound", price:500, emoji:"🍰", image:"assets/vanilla-full-reference.jpg", desc:"Classic vanilla flavour-এর soft cake—family gathering ও special moments-এর জন্য ideal। Reference design-এর মতো customise করা যাবে; extra design হলে price একটু বাড়তে পারে।"},
-      {id:"cake-chocolate-half", category:"cake", name:"Chocolate Cake", size:"Half Pound", price:350, emoji:"🍫", desc:"Rich chocolate flavour এবং soft texture—chocolate lovers-দের জন্য delicious choice।"},
-      {id:"cake-chocolate-full", category:"cake", name:"Chocolate Cake", size:"Full Pound", price:600, emoji:"🍫", desc:"Extra rich chocolate taste—birthday, celebration বা gift করার জন্য perfect treat।"},
-      {id:"cake-orange-half", category:"cake", name:"Orange Cake", size:"Half Pound", price:350, emoji:"🍊", desc:"Fresh orange flavour-এর refreshing cake—হালকা citrus taste পছন্দ করলে এটি আপনার জন্য।"},
-      {id:"cake-orange-full", category:"cake", name:"Orange Cake", size:"Full Pound", price:600, emoji:"🍊", desc:"Bright & fresh orange taste—প্রতিটি bite-এ পাবেন sweet এবং refreshing flavour।"},
+      {id:"cake-vanilla-half", category:"cake", name:"Vanilla Cake — Half Pound", size:"Half Pound", price:300, emoji:"🍰", desc:"Soft & fluffy vanilla cake—ছোট celebration, birthday বা sweet craving-এর জন্য perfect।"},
+      {id:"cake-vanilla-full", category:"cake", name:"Vanilla Cake — Full Pound", size:"Full Pound", price:500, emoji:"🍰", image:"assets/vanilla-full-reference.jpg", desc:"Classic vanilla flavour-এর soft cake—family gathering ও special moments-এর জন্য ideal। Reference design-এর মতো customise করা যাবে; extra design হলে price একটু বাড়তে পারে।"},
+      {id:"cake-chocolate-half", category:"cake", name:"Chocolate Cake — Half Pound", size:"Half Pound", price:350, emoji:"🍫", desc:"Rich chocolate flavour এবং soft texture—chocolate lovers-দের জন্য delicious choice।"},
+      {id:"cake-chocolate-full", category:"cake", name:"Chocolate Cake — Full Pound", size:"Full Pound", price:600, emoji:"🍫", desc:"Extra rich chocolate taste—birthday, celebration বা gift করার জন্য perfect treat।"},
+      {id:"cake-orange-half", category:"cake", name:"Orange Cake — Half Pound", size:"Half Pound", price:350, emoji:"🍊", desc:"Fresh orange flavour-এর refreshing cake—হালকা citrus taste পছন্দ করলে এটি আপনার জন্য।"},
+      {id:"cake-orange-full", category:"cake", name:"Orange Cake — Full Pound", size:"Full Pound", price:600, emoji:"🍊", desc:"Bright & fresh orange taste—প্রতিটি bite-এ পাবেন sweet এবং refreshing flavour।"},
 
-      {id:"tub-vanilla-500", category:"tub", name:"Vanilla Tub Cake", size:"500 ml", price:220, emoji:"🧁", desc:"Creamy vanilla layers-এর convenient tub cake—নিজে enjoy বা share করার জন্য great।"},
-      {id:"tub-vanilla-1000", category:"tub", name:"Vanilla Tub Cake", size:"1000 ml", price:420, emoji:"🧁", desc:"Large-size vanilla tub cake—friends ও family-এর সঙ্গে share করার জন্য perfect।"},
-      {id:"tub-chocolate-500", category:"tub", name:"Chocolate Tub Cake", size:"500 ml", price:250, emoji:"🍫", desc:"Chocolate cream ও soft cake-এর tasty combination—একটি tub-এ full chocolate happiness।"},
-      {id:"tub-chocolate-1000", category:"tub", name:"Chocolate Tub Cake", size:"1000 ml", price:450, emoji:"🍫", desc:"Large chocolate tub—party, gathering বা বেশি chocolate craving-এর জন্য suitable।"},
-      {id:"tub-orange-500", category:"tub", name:"Orange Tub Cake", size:"500 ml", price:250, emoji:"🍊", desc:"Refreshing orange flavour-এর creamy tub cake—sweet এবং citrusy taste-এর সুন্দর mix।"},
-      {id:"tub-orange-1000", category:"tub", name:"Orange Tub Cake", size:"1000 ml", price:450, emoji:"🍊", desc:"Large orange tub cake—family sharing এবং special occasions-এর জন্য delicious option।"},
+      {id:"tub-vanilla-500", category:"tub", name:"Vanilla Tub Cake — 500 ml", size:"500 ml", price:220, emoji:"🧁", desc:"Creamy vanilla layers-এর convenient tub cake—নিজে enjoy বা share করার জন্য great।"},
+      {id:"tub-vanilla-1000", category:"tub", name:"Vanilla Tub Cake — 1000 ml", size:"1000 ml", price:420, emoji:"🧁", desc:"Large-size vanilla tub cake—friends ও family-এর সঙ্গে share করার জন্য perfect।"},
+      {id:"tub-chocolate-500", category:"tub", name:"Chocolate Tub Cake — 500 ml", size:"500 ml", price:250, emoji:"🍫", desc:"Chocolate cream ও soft cake-এর tasty combination—একটি tub-এ full chocolate happiness।"},
+      {id:"tub-chocolate-1000", category:"tub", name:"Chocolate Tub Cake — 1000 ml", size:"1000 ml", price:450, emoji:"🍫", desc:"Large chocolate tub—party, gathering বা বেশি chocolate craving-এর জন্য suitable।"},
+      {id:"tub-orange-500", category:"tub", name:"Orange Tub Cake — 500 ml", size:"500 ml", price:250, emoji:"🍊", desc:"Refreshing orange flavour-এর creamy tub cake—sweet এবং citrusy taste-এর সুন্দর mix।"},
+      {id:"tub-orange-1000", category:"tub", name:"Orange Tub Cake — 1000 ml", size:"1000 ml", price:450, emoji:"🍊", desc:"Large orange tub cake—family sharing এবং special occasions-এর জন্য delicious option।"},
 
-      {id:"jar-vanilla", category:"jar", name:"Vanilla Jar Cake", size:"350 ml", price:120, emoji:"🍮", desc:"Cute jar-এর মধ্যে soft vanilla cake—quick dessert বা ছোট gift-এর জন্য lovely choice।"},
-      {id:"jar-chocolate", category:"jar", name:"Chocolate Jar Cake", size:"350 ml", price:150, emoji:"🍫", desc:"Quick chocolate craving মেটানোর জন্য rich, creamy এবং delicious jar cake।"},
-      {id:"jar-orange", category:"jar", name:"Orange Jar Cake", size:"350 ml", price:150, emoji:"🍊", desc:"Fresh orange flavour-এর handy jar cake—যেকোনো সময় sweet treat হিসেবে enjoy করুন।"}
+      {id:"jar-vanilla", category:"jar", name:"Vanilla Jar Cake — 350 ml", size:"350 ml", price:120, emoji:"🍮", desc:"Cute jar-এর মধ্যে soft vanilla cake—quick dessert বা ছোট gift-এর জন্য lovely choice।"},
+      {id:"jar-chocolate", category:"jar", name:"Chocolate Jar Cake — 350 ml", size:"350 ml", price:150, emoji:"🍫", desc:"Quick chocolate craving মেটানোর জন্য rich, creamy এবং delicious jar cake।"},
+      {id:"jar-orange", category:"jar", name:"Orange Jar Cake — 350 ml", size:"350 ml", price:150, emoji:"🍊", desc:"Fresh orange flavour-এর handy jar cake—যেকোনো সময় sweet treat হিসেবে enjoy করুন।"}
     ];
 
     let cart = {};
@@ -451,12 +442,19 @@
 
     const money = value => "৳ " + value.toLocaleString("en-BD");
 
+
+    function closeWelcome() {
+      const popup = document.getElementById("welcomePopup");
+      if (popup) popup.classList.add("hidden");
+      document.body.style.overflow = "";
+    }
+
     function renderProducts() {
       const container = document.getElementById("products");
       const visible = products.filter(p => activeFilter === "all" || p.category === activeFilter);
       container.innerHTML = visible.map(p => `
         <article class="card">
-          ${p.image ? `<img class="product-photo" src="${p.image}" alt="${p.name} reference image">` : `<div class="cake-visual"><span>${p.emoji}</span></div>`}
+          ${p.image ? `<img class="product-photo" src="${p.image}" alt="${p.name} reference image">` : `<img class="product-photo" src="assets/vanilla-full-reference.jpg" alt="Take & Bite cake photo">`}
           <span class="tag">${p.category === "cake" ? "FULL CAKE" : p.category === "tub" ? "TUB CAKE" : "JAR CAKE"}</span>
           <h3>${p.name}</h3>
           <p>${p.size} · ${p.desc}</p>
@@ -604,35 +602,9 @@
       }
     }
 
-
-    let reviews = JSON.parse(localStorage.getItem("takeBiteReviews") || "[]");
-    function stars(rating) { return "★".repeat(rating) + "☆".repeat(5-rating); }
-    function escapeHtml(value) { return String(value).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c])); }
-    function renderReviews() {
-      const list = document.getElementById("reviewList");
-      if (!reviews.length) list.innerHTML = '<div class="empty">এখনও কোনো customer review নেই। প্রথম review টি আপনিই দিন! 💜</div>';
-      else list.innerHTML = reviews.slice().reverse().map(r => `<div class="review-item"><div class="review-meta"><strong>${escapeHtml(r.name)}</strong><span class="stars">${stars(r.rating)}</span></div><p>${escapeHtml(r.text)}</p></div>`).join("");
-      const avg = reviews.length ? reviews.reduce((sum,r)=>sum+r.rating,0)/reviews.length : 0;
-      document.getElementById("averageRating").textContent = reviews.length ? avg.toFixed(1) : "—";
-      document.getElementById("averageStars").textContent = reviews.length ? stars(Math.round(avg)) : "☆☆☆☆☆";
-      document.getElementById("reviewCount").textContent = `Based on ${reviews.length} review${reviews.length===1?"":"s"}`;
-    }
-    function submitReview(event) {
-      event.preventDefault();
-      const rating = Number(document.querySelector('input[name="rating"]:checked')?.value || 0);
-      const name = document.getElementById("reviewName").value.trim();
-      const text = document.getElementById("reviewText").value.trim();
-      if (!rating || !name || !text) return showToast("Please complete your review.");
-      reviews.push({name, rating, text});
-      localStorage.setItem("takeBiteReviews", JSON.stringify(reviews));
-      renderReviews();
-      document.getElementById("reviewForm").reset();
-      showToast("Thank you for your review! 💜");
-    }
-
+    document.body.style.overflow = "hidden";
     document.getElementById("deliveryDate").min = getMinimumOrderDate();
     toggleDeliveryFields();
-    renderReviews();
     renderProducts();
     updateCartCount();
   </script>
