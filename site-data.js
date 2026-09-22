@@ -13,20 +13,36 @@ window.TB_DATA = {
     "storyTitle2": "of Happiness",
     "storyText": "From birthdays to little treats, our cakes are made to turn everyday moments into extra-special memories. We keep things simple: fresh ingredients, careful preparation and a whole lot of love.",
     "storyImage": "assets/vanilla-full-reference.jpg",
-    "storyPills": ["♡ Made with Love", "🍃 Fresh Ingredients", "🎁 Perfect for Gifting"],
+    "storyPills": [
+      "♡ Made with Love",
+      "🍃 Fresh Ingredients",
+      "🎁 Perfect for Gifting"
+    ],
     "whyTitle": "Why Take & Bite?",
     "whySubtitle": "Little details that make every order feel special."
   },
   "features": [
-    {"icon":"♡","title":"Made with Love","text":"Every cake is prepared with care, from mixing to the final decoration."},
-    {"icon":"🍃","title":"Fresh Ingredients","text":"We focus on fresh flavours and a homemade taste you'll want to come back for."},
-    {"icon":"🎁","title":"Perfect for Any Occasion","text":"Birthdays, gifts, celebrations—or just because today deserves cake."}
+    {
+      "icon": "♡",
+      "title": "Made with Love",
+      "text": "Every cake is prepared with care, from mixing to the final decoration."
+    },
+    {
+      "icon": "🍃",
+      "title": "Fresh Ingredients",
+      "text": "We focus on fresh flavours and a homemade taste you'll want to come back for."
+    },
+    {
+      "icon": "🎁",
+      "title": "Perfect for Any Occasion",
+      "text": "Birthdays, gifts, celebrations—or just because today deserves cake."
+    }
   ],
   "settings": {
     "brand": "Take & Bite",
     "announcement": "⏰ Order at least 2 days before your delivery date · Custom designs available with a small extra charge",
-    "offerAnnouncementEnabled": false,
-    "offerAnnouncement": "🎁 Special Offer: Add your offer message here",
+    "offerAnnouncementEnabled": true,
+    "offerAnnouncement": "🎁 Special Offer: 20% OFF",
     "location": "Sagorpara, Rangpur City",
     "facebook": "https://www.facebook.com/profile.php?id=61570888025581"
   },
