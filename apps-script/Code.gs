@@ -95,6 +95,12 @@ function doGet(e) {
   const action = (e && e.parameter && e.parameter.action) || "ping";
   try {
     if (action === "ping") return json_({status:"ok", message:"Take & Bite API is running"});
+    if (action === "orderStatus") {
+      const result = getOrderStatus_(e.parameter || {});
+      const callback = String((e.parameter && e.parameter.callback) || "").trim();
+      if (callback) return jsonp_(callback, result);
+      return json_(result);
+    }
     if (action === "data") {
       const result = getSiteData_();
       const callback = String((e.parameter && e.parameter.callback) || "").trim();
@@ -478,14 +484,15 @@ function normalizeOrderItems_(rawItems) {
 function saveOrder_(data) {
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
+  const orderId = String(data.orderId || ("TB-" + Date.now())).trim();
+  const cacheKey = "TB_ORDER_STATUS_" + orderId;
+  CacheService.getScriptCache().put(cacheKey, JSON.stringify({status:"pending", orderId:orderId}), 600);
   try {
     const normalized = normalizeOrderItems_(data.items || []);
     const sheet = getOrCreateSheet_();
     const itemText = normalized.items.map(item =>
       `${item.name}${item.size ? " (" + item.size + ")" : ""} x${item.quantity} = ৳${item.subtotal}`
     ).join(" | ");
-
-    const orderId = String(data.orderId || ("TB-" + Date.now())).trim();
 
     // Prevent accidental duplicate orders if the browser retries the request.
     const existing = sheet.getLastRow() >= 2
@@ -494,7 +501,9 @@ function saveOrder_(data) {
     if (existing.indexOf(orderId) >= 0) {
       const existingRow = existing.indexOf(orderId) + 2;
       const existingTotal = Number(sheet.getRange(existingRow, 12).getValue()) || 0;
-      return {status:"success", orderId:orderId, itemCount:normalized.itemCount, total:existingTotal, duplicate:true};
+      const duplicateResult = {status:"success", orderId:orderId, itemCount:normalized.itemCount, total:existingTotal, duplicate:true};
+      CacheService.getScriptCache().put(cacheKey, JSON.stringify(duplicateResult), 600);
+      return duplicateResult;
     }
 
     sheet.appendRow([
@@ -532,15 +541,45 @@ function saveOrder_(data) {
     // Force the spreadsheet write before returning success to the customer.
     SpreadsheetApp.flush();
 
-    return {
+    const successResult = {
       status:"success",
       orderId:orderId,
       itemCount:normalized.itemCount,
       total:normalized.grandTotal
     };
+    CacheService.getScriptCache().put(cacheKey, JSON.stringify(successResult), 600);
+    return successResult;
+  } catch (err) {
+    const errorResult = {status:"error", orderId:orderId, message:String(err)};
+    CacheService.getScriptCache().put(cacheKey, JSON.stringify(errorResult), 600);
+    throw err;
   } finally {
     lock.releaseLock();
   }
+}
+
+function getOrderStatus_(params) {
+  const orderId = String((params && params.orderId) || "").trim();
+  if (!orderId) return {status:"error", message:"Order ID is required."};
+  const cached = CacheService.getScriptCache().get("TB_ORDER_STATUS_" + orderId);
+  if (cached) {
+    try { return JSON.parse(cached); } catch (_) {}
+  }
+  // Fallback: if the write completed but the cache entry expired, confirm from the sheet.
+  const sheet = getOrCreateSheet_();
+  const lastRow = sheet.getLastRow();
+  if (lastRow >= 2) {
+    const ids = sheet.getRange(2, 2, lastRow - 1, 1).getDisplayValues().flat();
+    const idx = ids.indexOf(orderId);
+    if (idx >= 0) {
+      const row = idx + 2;
+      const total = Number(sheet.getRange(row, 12).getValue()) || 0;
+      const result = {status:"success", orderId:orderId, total:total};
+      CacheService.getScriptCache().put("TB_ORDER_STATUS_" + orderId, JSON.stringify(result), 600);
+      return result;
+    }
+  }
+  return {status:"pending", orderId:orderId};
 }
 
 function getOrders_() {
