@@ -1,1 +1,1 @@
-window.TB_API_URL = "https://script.google.com/macros/s/AKfycbx8rdzEP5oO5DZ1pMjIDQCZdeoVhWzxL15Jb8eqbo92A_mmwMuzVGPZZW6hfkDqkxP7Bg/exec";
+window.TB_API_URL = "https://script.google.com/macros/s/AKfycbzvGRZaTCIcp-QLN1-orAoZFrWV3NX255bM2qMv9BguB12YSatMHGtwvOn2Y_bAQGeX/exec";
