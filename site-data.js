@@ -42,7 +42,7 @@ window.TB_DATA = {
     "brand": "Take & Bite",
     "announcement": "⏰ Order at least 2 days before your delivery date · Custom designs available with a small extra charge",
     "offerAnnouncementEnabled": false,
-    "offerAnnouncement": "🎁 Special Offer: 20% OFF",
+    "offerAnnouncement": "🎁 Special Offer: 30% OFF",
     "location": "Sagorpara, Rangpur City",
     "facebook": "https://www.facebook.com/profile.php?id=61570888025581"
   },
