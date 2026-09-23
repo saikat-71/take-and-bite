@@ -321,16 +321,26 @@ function logout_(data) {
 }
 
 function getSiteData_() {
-  // IMPORTANT:
-  // Reading the public site data must NOT require GITHUB_TOKEN.
-  // Customers need product prices/catalog data to place an order, while
-  // GitHub authentication is only required for admin write operations.
+  // Reading public site data does NOT require GITHUB_TOKEN.
   const raw = getPublicSiteData_();
-  const marker = "window.TB_DATA = ";
-  const start = raw.indexOf(marker);
-  if (start < 0) throw new Error("site-data.js format not recognized.");
-  const jsonText = raw.slice(start + marker.length).replace(/;\\s*$/, "").trim();
-  return {status:"success", siteData:JSON.parse(jsonText)};
+  const marker = "window.TB_DATA";
+  const markerPos = raw.indexOf(marker);
+  if (markerPos < 0) throw new Error("site-data.js format not recognized.");
+
+  // Extract only the TB_DATA object. This avoids JSON.parse failures when
+  // site-data.js has a trailing semicolon, comments, or other JS text.
+  const firstBrace = raw.indexOf("{", markerPos);
+  const lastBrace = raw.lastIndexOf("}");
+  if (firstBrace < 0 || lastBrace <= firstBrace) {
+    throw new Error("Could not locate TB_DATA JSON object in site-data.js.");
+  }
+
+  const jsonText = raw.slice(firstBrace, lastBrace + 1).trim();
+  try {
+    return {status:"success", siteData:JSON.parse(jsonText)};
+  } catch (err) {
+    throw new Error("Invalid TB_DATA JSON in site-data.js: " + err.message);
+  }
 }
 
 function getPublicSiteData_() {
