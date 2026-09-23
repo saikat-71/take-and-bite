@@ -198,15 +198,15 @@
 
   <div class="toast" id="toast"></div>
 
-  <script src="site-data.js"></script>
+  <script>document.write('<script src="site-data.js?v='+Date.now()+'"><\/script>');</script>
   <script src="api-config.js"></script>
   <script>
     // 1) After deploying Google Apps Script, paste your Web App URL here:
     const GOOGLE_APPS_SCRIPT_URL = window.TB_API_URL || "";
 
-    const siteData = window.TB_DATA || {};
-    const home = siteData.homepage || {};
-    const settings = siteData.settings || {};
+    let siteData = window.TB_DATA || {};
+    let home = siteData.homepage || {};
+    let settings = siteData.settings || {};
 
     function applyHomepageContent() {
       const setText = (id, value) => { const el=document.getElementById(id); if(el && value != null) el.textContent=value; };
@@ -227,7 +227,7 @@
     function escapeHtml(x){return String(x??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));}
     applyHomepageContent();
 
-    const products = siteData.products || [];
+    let products = siteData.products || [];
 
     const CART_STORAGE_KEY = "tb-cart-v2";
     let cart = loadCart();
@@ -604,20 +604,48 @@
       window.addEventListener("message", onMessage);
       // Do not show a false timeout error while Google Sheets is still processing.
       // The hidden iframe submission is fire-and-forget; the server validates and saves the order.
+      // Success is shown ONLY after Apps Script confirms that the order was
+      // actually written to Google Sheets. Never use a client-side success timer.
       const timer = setTimeout(() => {
-        if (!done) finish(true, "Order sent successfully 💜 Google Sheet sync may take a few seconds.");
-      }, 12000);
+        if (!done) finish(false, "The order service is taking too long to respond. Please try again.");
+      }, 30000);
 
       try {
         form.submit();
-        // The browser has accepted the submission. Give immediate feedback instead of
-        // making the customer wait for Apps Script/Sheets to finish.
-        setTimeout(() => {
-          if (!done) finish(true, "Order sent successfully 💜 We will contact you soon.");
-        }, 900);
       } catch (error) {
         finish(false, "Could not submit the order. Please try again.");
       }
+    }
+
+    function loadLiveSiteData() {
+      return new Promise((resolve, reject) => {
+        if (!GOOGLE_APPS_SCRIPT_URL || GOOGLE_APPS_SCRIPT_URL.includes("PASTE_YOUR")) {
+          resolve(false);
+          return;
+        }
+        const cb = "tbSiteData_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+        const script = document.createElement("script");
+        let finished = false;
+        const cleanup = () => {
+          clearTimeout(timer);
+          try { delete window[cb]; } catch (_) {}
+          script.remove();
+        };
+        const finish = (ok, value) => {
+          if (finished) return;
+          finished = true;
+          cleanup();
+          ok ? resolve(value) : reject(value);
+        };
+        const timer = setTimeout(() => finish(false, new Error("Live site data timeout")), 10000);
+        window[cb] = result => {
+          if (result && result.status === "success" && result.siteData) finish(true, result.siteData);
+          else finish(false, new Error((result && result.message) || "Could not load live site data"));
+        };
+        script.src = GOOGLE_APPS_SCRIPT_URL + "?action=data&callback=" + encodeURIComponent(cb) + "&cb=" + Date.now();
+        script.onerror = () => finish(false, new Error("Could not load live site data"));
+        document.body.appendChild(script);
+      });
     }
 
     function applySiteData(){
@@ -636,6 +664,23 @@
     toggleDeliveryFields();
     renderProducts();
     updateCartCount();
+
+    // Load the newest CMS data directly from Apps Script after the initial
+    // static page has rendered. This bypasses stale GitHub Pages/browser cache.
+    loadLiveSiteData().then(live => {
+      if (!live) return;
+      siteData = live;
+      home = siteData.homepage || {};
+      settings = siteData.settings || {};
+      products = siteData.products || [];
+      applyHomepageContent();
+      applySiteData();
+      renderProducts();
+      renderCart();
+      updateCartCount();
+    }).catch(() => {
+      // Static site-data.js remains as a safe fallback when the API is unavailable.
+    });
   </script>
 </body>
 </html>
