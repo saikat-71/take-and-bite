@@ -5,7 +5,9 @@
  * 1) Create a Google Sheet and open Extensions > Apps Script.
  * 2) Paste this file.
  * 3) Run SETUP_ONCE() once.
- * 4) Add GITHUB_TOKEN in Apps Script > Project Settings > Script Properties.
+ * 4) Add GITHUB_TOKEN in Apps Script > Project Settings > Script Properties
+ *    for ADMIN write operations (save website data, upload/delete images).
+ *    Customer checkout/order placement does NOT require GITHUB_TOKEN.
  *    Use a fine-grained token scoped only to this repository with Contents:
  *    Read and write permission. NEVER put the token in this source file.
  * 5) Deploy > New deployment > Web app > Execute as Me > Anyone.
@@ -94,7 +96,11 @@ function hashPassword_(password, salt) {
 function doGet(e) {
   const action = (e && e.parameter && e.parameter.action) || "ping";
   try {
-    if (action === "ping") return json_({status:"ok", message:"Take & Bite API is running"});
+    if (action === "ping") return json_({
+      status:"ok",
+      message:"Take & Bite API is running",
+      githubConfigured: !!PROP.getProperty("GITHUB_TOKEN")
+    });
     if (action === "orderStatus") {
       const result = getOrderStatus_(e.parameter || {});
       const callback = String((e.parameter && e.parameter.callback) || "").trim();
@@ -315,12 +321,49 @@ function logout_(data) {
 }
 
 function getSiteData_() {
-  const raw = getFileText_(DATA_PATH);
+  // IMPORTANT:
+  // Reading the public site data must NOT require GITHUB_TOKEN.
+  // Customers need product prices/catalog data to place an order, while
+  // GitHub authentication is only required for admin write operations.
+  const raw = getPublicSiteData_();
   const marker = "window.TB_DATA = ";
   const start = raw.indexOf(marker);
   if (start < 0) throw new Error("site-data.js format not recognized.");
-  const jsonText = raw.slice(start + marker.length).replace(/;\s*$/, "").trim();
+  const jsonText = raw.slice(start + marker.length).replace(/;\\s*$/, "").trim();
   return {status:"success", siteData:JSON.parse(jsonText)};
+}
+
+function getPublicSiteData_() {
+  const owner = PROP.getProperty("GITHUB_OWNER") || "saikat-71";
+  const repo = PROP.getProperty("GITHUB_REPO") || "take-and-bite";
+  const branch = PROP.getProperty("GITHUB_BRANCH") || BRANCH;
+
+  // GitHub Pages repositories are normally public. This raw-file request
+  // does not need a PAT, so checkout/order placement is not blocked when
+  // GITHUB_TOKEN is missing.
+  const url =
+    "https://raw.githubusercontent.com/" +
+    encodeURIComponent(owner) + "/" +
+    encodeURIComponent(repo) + "/" +
+    encodeURIComponent(branch) + "/" +
+    DATA_PATH +
+    "?cb=" + Date.now();
+
+  const res = UrlFetchApp.fetch(url, {
+    method: "get",
+    muteHttpExceptions: true,
+    followRedirects: true,
+    headers: {"Cache-Control":"no-cache"}
+  });
+
+  const code = res.getResponseCode();
+  if (code < 200 || code >= 300) {
+    throw new Error(
+      "Could not read public site data from GitHub (HTTP " + code +
+      "). Check GITHUB_OWNER/GITHUB_REPO/GITHUB_BRANCH and make sure the repository is public."
+    );
+  }
+  return res.getContentText();
 }
 
 function commitData_(siteData) {
