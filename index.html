@@ -505,7 +505,7 @@
       event.preventDefault();
       const items = cartItems();
       if (!items.length) return showToast("Please add at least one product.");
-      if (GOOGLE_APPS_SCRIPT_URL.includes("PASTE_YOUR")) {
+      if (!GOOGLE_APPS_SCRIPT_URL || GOOGLE_APPS_SCRIPT_URL.includes("PASTE_YOUR")) {
         showToast("Please configure the Google Sheets URL first.");
         return;
       }
@@ -518,12 +518,13 @@
 
       const deliveryType = document.getElementById("deliveryType").value;
       const location = document.getElementById("location").value.trim();
+      const orderId = "TB-" + Date.now() + "-" + Math.random().toString(16).slice(2, 8);
       const payload = {
         action: "order",
         transport: "iframe",
         origin: window.location.origin === "null" ? "*" : window.location.origin,
         messageId: "order-" + Date.now() + "-" + Math.random().toString(16).slice(2),
-        orderId: "TB-" + Date.now(),
+        orderId: orderId,
         timestamp: new Date().toISOString(),
         customerName: document.getElementById("customerName").value.trim(),
         phone: document.getElementById("phone").value.trim(),
@@ -575,13 +576,24 @@
       });
       document.body.appendChild(form);
 
-      let done = false;
+      let finished = false;
+      let pollTimer = null;
+      let timeoutTimer = null;
+      let callbackName = null;
+
+      const cleanup = () => {
+        if (pollTimer) clearTimeout(pollTimer);
+        if (timeoutTimer) clearTimeout(timeoutTimer);
+        if (callbackName) {
+          try { delete window[callbackName]; } catch (_) {}
+        }
+        try { form.remove(); } catch (_) {}
+      };
+
       const finish = (ok, message) => {
-        if (done) return;
-        done = true;
-        window.removeEventListener("message", onMessage);
-        clearTimeout(timer);
-        form.remove();
+        if (finished) return;
+        finished = true;
+        cleanup();
         if (ok) {
           showToast(message || "Order submitted! We will contact you soon 💜");
           cart = {};
@@ -595,23 +607,49 @@
         button.disabled = false;
         button.textContent = "Place order 💜";
       };
-      const onMessage = e => {
-        const d = e && e.data;
-        if (!d || d.messageId !== payload.messageId) return;
-        const result = d.result || {};
-        finish(result.status === "success", result.message || (result.status === "success" ? "Order submitted! We will contact you soon 💜" : "Could not submit the order."));
+
+      // We intentionally do not depend on the hidden iframe's postMessage response.
+      // Google Apps Script may redirect the iframe response, which can prevent the
+      // browser from delivering the expected message event. Instead, the server
+      // records order status in CacheService and we verify it through JSONP.
+      const pollOrderStatus = () => {
+        if (finished) return;
+        callbackName = "tbOrderStatus_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+        const script = document.createElement("script");
+        const cb = callbackName;
+        window[cb] = result => {
+          try { delete window[cb]; } catch (_) {}
+          try { script.remove(); } catch (_) {}
+          callbackName = null;
+
+          if (result && result.status === "success") {
+            finish(true, "Order submitted successfully 💜 Order ID: " + (result.orderId || orderId));
+            return;
+          }
+          if (result && result.status === "error") {
+            finish(false, result.message || "Order could not be saved. Please try again.");
+            return;
+          }
+          pollTimer = setTimeout(pollOrderStatus, 1200);
+        };
+        script.onerror = () => {
+          try { delete window[cb]; } catch (_) {}
+          try { script.remove(); } catch (_) {}
+          callbackName = null;
+          pollTimer = setTimeout(pollOrderStatus, 1500);
+        };
+        script.src = GOOGLE_APPS_SCRIPT_URL + "?action=orderStatus&orderId=" + encodeURIComponent(orderId) + "&callback=" + encodeURIComponent(cb) + "&cb=" + Date.now();
+        document.body.appendChild(script);
       };
-      window.addEventListener("message", onMessage);
-      // Do not show a false timeout error while Google Sheets is still processing.
-      // The hidden iframe submission is fire-and-forget; the server validates and saves the order.
-      // Success is shown ONLY after Apps Script confirms that the order was
-      // actually written to Google Sheets. Never use a client-side success timer.
-      const timer = setTimeout(() => {
-        if (!done) finish(false, "The order service is taking too long to respond. Please try again.");
-      }, 30000);
+
+      timeoutTimer = setTimeout(() => {
+        finish(false, "The order could not be confirmed. Please check your connection and try again.");
+      }, 45000);
 
       try {
         form.submit();
+        // Give the POST a moment to reach Apps Script, then begin confirmation polling.
+        setTimeout(pollOrderStatus, 700);
       } catch (error) {
         finish(false, "Could not submit the order. Please try again.");
       }
