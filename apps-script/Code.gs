@@ -97,6 +97,8 @@ function doGet(e) {
     if (action === "ping") return json_({status:"ok", message:"Take & Bite API is running"});
     if (action === "data") {
       const result = getSiteData_();
+      const callback = String((e.parameter && e.parameter.callback) || "").trim();
+      if (callback) return jsonp_(callback, result);
       if (e.parameter && e.parameter.transport === "iframe") return iframe_(result, e.parameter.origin, e.parameter.messageId);
       return json_(result);
     }
@@ -483,9 +485,21 @@ function saveOrder_(data) {
       `${item.name}${item.size ? " (" + item.size + ")" : ""} x${item.quantity} = ৳${item.subtotal}`
     ).join(" | ");
 
+    const orderId = String(data.orderId || ("TB-" + Date.now())).trim();
+
+    // Prevent accidental duplicate orders if the browser retries the request.
+    const existing = sheet.getLastRow() >= 2
+      ? sheet.getRange(2, 2, sheet.getLastRow() - 1, 1).getDisplayValues().flat()
+      : [];
+    if (existing.indexOf(orderId) >= 0) {
+      const existingRow = existing.indexOf(orderId) + 2;
+      const existingTotal = Number(sheet.getRange(existingRow, 12).getValue()) || 0;
+      return {status:"success", orderId:orderId, itemCount:normalized.itemCount, total:existingTotal, duplicate:true};
+    }
+
     sheet.appendRow([
       new Date(),
-      data.orderId || ("TB-" + Date.now()),
+      orderId,
       String(data.customerName || "").trim(),
       String(data.phone || "").trim(),
       String(data.address || "").trim(),
@@ -504,7 +518,7 @@ function saveOrder_(data) {
     const itemsSheet = getOrCreateItemsSheet_();
     const rows = normalized.items.map(item => [
       new Date(),
-      data.orderId || "",
+      orderId,
       item.id,
       item.productId,
       item.name,
@@ -515,9 +529,12 @@ function saveOrder_(data) {
     ]);
     itemsSheet.getRange(itemsSheet.getLastRow() + 1, 1, rows.length, 9).setValues(rows);
 
+    // Force the spreadsheet write before returning success to the customer.
+    SpreadsheetApp.flush();
+
     return {
       status:"success",
-      orderId:data.orderId || "",
+      orderId:orderId,
       itemCount:normalized.itemCount,
       total:normalized.grandTotal
     };
