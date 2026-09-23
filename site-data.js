@@ -1,25 +1,25 @@
 window.TB_DATA = {
   "homepage": {
-    "heroEyebrow": "♡ Freshly baked • Made with love",
+    "heroEyebrow": "♡ Freshly baked • ভালোবাসা দিয়ে তৈরি",
     "heroTitle1": "Sweet Moments",
-    "heroTitle2": "Start Here.",
-    "heroDescription": "Delicious cakes made with love, perfect for birthdays, celebrations, gifting, or simply making an ordinary day a little sweeter.",
-    "heroPrimaryButton": "Discover cakes →",
-    "heroSecondaryButton": "Baked Cakes ✨",
+    "heroTitle2": "শুরু হোক এখান থেকেই.",
+    "heroDescription": "Freshly baked cakes, made with love — birthday, celebration, gifting বা just a little sweet craving, every moment deserves a delicious bite.",
+    "heroPrimaryButton": "Cake Collection দেখুন →",
+    "heroSecondaryButton": "Baked Cakes দেখুন ✨",
     "floatingNoteTitle": "Handmade",
-    "floatingNoteText": "fresh every day",
+    "floatingNoteText": "প্রতিদিন fresh & delicious",
     "heroImage": "assets/Hero-Image.jpg",
     "storyTitle1": "A Little Slice",
-    "storyTitle2": "of Happiness",
-    "storyText": "From birthdays to little treats, our cakes are made to turn everyday moments into extra-special memories. We keep things simple: fresh ingredients, careful preparation and a whole lot of love.",
+    "storyTitle2": "of Happiness ✨",
+    "storyText": "Birthday থেকে surprise gift — every cake is made to turn simple moments into sweet memories. Fresh ingredients, homemade taste আর অনেকটা ভালোবাসা — that’s our recipe.",
     "storyImage": "assets/vanilla-full-reference.jpg",
     "storyPills": [
       "♡ Made with Love",
       "🍃 Fresh Ingredients",
       "🎁 Perfect for Gifting"
     ],
-    "whyTitle": "Why Take & Bite?",
-    "whySubtitle": "Little details that make every order feel special."
+    "whyTitle": "Why Take & Bite? 💜",
+    "whySubtitle": "কারণ every bite should feel a little more special."
   },
   "features": [
     {
@@ -43,6 +43,8 @@ window.TB_DATA = {
     "announcement": "⏰ Order at least 2 days before your delivery date · Custom designs available with a small extra charge",
     "offerAnnouncementEnabled": false,
     "offerAnnouncement": "🎁 Special Offer: 30% OFF",
+    "offerTitle": "🎁 Special Offer",
+    "offerDescription": "Enjoy 30% OFF on selected cakes. Order now and make your sweet moments extra special!",
     "location": "Sagorpara, Rangpur City",
     "facebook": "https://www.facebook.com/profile.php?id=61570888025581"
   },
