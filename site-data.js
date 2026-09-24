@@ -41,7 +41,7 @@ window.TB_DATA = {
   "settings": {
     "brand": "Take & Bite",
     "announcement": "⏰ Order at least 2 days before your delivery date · Custom designs available with a small extra charge",
-    "offerAnnouncementEnabled": true,
+    "offerAnnouncementEnabled": false,
     "offerAnnouncement": "Enjoy 30% OFF on selected cakes. Order now and make your sweet moments extra special!",
     "offerTitle": "🎁 Special Offer",
     "offerDescription": "Enjoy 30% OFF on selected cakes. Order now and make your sweet moments extra special!",
