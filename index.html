@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="assets/logo.png" />
   <title>Take & Bite | Homemade Cakes</title>
   <meta name="description" content="Order delicious jar cakes, tub cakes and full-size cakes from Take & Bite." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -64,6 +65,33 @@
     @media(max-width:850px){.category-grid-4{grid-template-columns:1fr 1fr}.baked-shell{grid-template-columns:1fr;padding:34px 24px}.gallery-grid{grid-template-columns:1fr 1fr}.baked-preview{height:300px}.hero-shell{grid-template-columns:1fr;padding:45px 28px;text-align:center}.hero-copy>p{margin:0 auto}.hero-actions{justify-content:center}.hero-art{order:-1;min-height:330px}.hero-art:before{width:280px;height:280px}.hero-art img{height:330px;max-width:340px}.delivery-box{text-align:left}.nav-links{display:none}.category-grid,.products,.features{grid-template-columns:1fr 1fr}.story{grid-template-columns:1fr;gap:25px}.story-copy{text-align:center}.story-copy p{margin-left:auto;margin-right:auto}}
     @media(max-width:560px){.category-grid-4{grid-template-columns:1fr}.baked-shell{padding:28px 18px}.gallery-grid{grid-template-columns:1fr}.baked-preview{height:260px}.baked-cta{flex-direction:column;align-items:flex-start}.nav-actions .theme-toggle{width:38px;height:38px}.container{width:min(92%,520px)}.nav-inner{min-height:68px}.brand{font-size:1.1rem}.brand img{width:45px;height:45px}.hero{padding-top:16px}.hero-shell{border-radius:24px;padding:32px 18px}.hero-art img{height:290px}.hero-art .floating-note{right:0;bottom:6%;font-size:.62rem}.hero-art:before{width:240px;height:240px}h1{font-size:3.8rem}.section{padding:42px 0}.section-head{display:block}.section-head h2{font-size:2.35rem}.section-head .eyebrow{display:inline-flex;margin-top:12px}.category-grid,.products,.features{grid-template-columns:1fr}.category-card{min-height:215px}.story-photo img{height:270px}.story-copy h2{font-size:2.6rem}.story-list{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.cart-item{grid-template-columns:1fr auto}.cart-item .qty{grid-column:2;grid-row:1}.cart-item .remove{grid-column:1;text-align:left}}
   
+    /* Mobile refinements */
+    @media(max-width:560px){
+      body{overflow-x:hidden}
+      .nav{position:sticky}
+      .nav-inner{gap:8px}
+      .nav-actions{gap:6px}
+      .cart-pill{padding:8px 10px;font-size:.68rem}
+      .category-card{min-height:190px;padding:16px}
+      .category-card img{width:118px;height:118px}
+      .card{padding:11px;border-radius:17px}
+      .product-photo{height:180px;max-height:180px}
+      .card h3{font-size:1.08rem}
+      .card p{font-size:.68rem;min-height:0}
+      .card-bottom{align-items:flex-end}
+      .add-btn,.select-size-btn{padding:8px 10px}
+      .variant-panel{display:none;grid-template-rows:none;opacity:1;margin-top:0}
+      .variant-panel.open{display:block;margin-top:10px}
+      .variant-panel-inner{gap:7px}
+      .variant-option{padding:9px}
+      .baked-shell{padding:24px 16px;gap:18px}
+      .baked-preview{height:220px}
+      .section-head h2{line-height:1.05}
+    }
+    @media(min-width:561px){
+      .variant-panel{display:grid}
+    }
+
     /* Offer popup — controlled from Admin > Offer Announcement */
     .offer-popup-backdrop{position:fixed;inset:0;background:rgba(28,20,35,.55);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:20px;z-index:9999;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s ease,visibility .25s ease}
     .offer-popup-backdrop.show{opacity:1;visibility:visible;pointer-events:auto}
@@ -180,10 +208,7 @@
       </div>
       <div style="border-top:1px solid var(--line);margin-top:22px;padding-top:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
         <small>© 2026 Take & Bite. All rights reserved.</small>
-        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-          <small>Crafted with ♡ in our bakery</small>
-          <a href="admin/" class="footer-admin-btn">Admin ↗</a>
-        </div>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><small>Crafted with ♡ in our bakery</small></div>
       </div>
     </div>
   </footer>
@@ -733,6 +758,18 @@
         popup.setAttribute("aria-hidden","true");
         return;
       }
+
+      // Show the current announcement only once until its content changes.
+      const popupKey="tb_offer_seen_v2";
+      const currentKey=btoa(unescape(encodeURIComponent(offerTitle+"|"+offerDescription)));
+      let seenKey="";
+      try{seenKey=sessionStorage.getItem(popupKey)||""}catch(_){}
+      if(seenKey===currentKey){
+        popup.classList.remove("show");
+        popup.setAttribute("aria-hidden","true");
+        return;
+      }
+
       title.textContent=offerTitle;
       description.textContent=offerDescription;
       clearTimeout(offerPopupTimer);
@@ -746,6 +783,14 @@
       if(popup){
         popup.classList.remove("show");
         popup.setAttribute("aria-hidden","true");
+        const title=document.getElementById("offerPopupTitle")?.textContent||"";
+        const description=document.getElementById("offerPopupDescription")?.textContent||"";
+        try{
+          sessionStorage.setItem(
+            "tb_offer_seen_v2",
+            btoa(unescape(encodeURIComponent(title+"|"+description)))
+          );
+        }catch(_){}
       }
     }
     document.getElementById("offerPopupClose")?.addEventListener("click",closeOfferPopup);
