@@ -10,10 +10,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    /* Global box sizing + mobile overflow guard */
-    *, *::before, *::after{box-sizing:border-box}
-    html, body{max-width:100%;overflow-x:hidden}
-
     :root{
       --cream:#ffffff; --cream-2:#f7f4ff; --pink:#ae8fff; --pink-soft:#eee8ff;
       --pink-deep:#ae8fff; --brown:#251d38; --brown-soft:#625a76; --green:#f1edff;
@@ -137,7 +133,20 @@
     .offer-popup-close:hover{background:#ebe5ef}
     @media(max-width:520px){.offer-popup{padding:28px 20px 24px;border-radius:20px}.offer-popup-title{margin-left:20px;margin-right:20px}}
 
-  </style>
+  
+/* HOME MOBILE: prevent page-level horizontal overflow without affecting the admin table scrolling */
+@media(max-width:560px){
+  html,body{width:100%;max-width:100%;overflow-x:clip !important;}
+  body{min-width:0;}
+  header,main,footer,section,.container,.nav-inner,.category-grid,.category-grid-4,.products,.features,.story,.footer-inner{min-width:0;max-width:100%;} 
+  .container{width:calc(100% - 24px);margin-left:auto;margin-right:auto;}
+  .nav-inner{width:100%;padding-left:0;padding-right:0;}
+  .products,.category-grid,.category-grid-4,.features,.story{width:100%;}
+  .footer-inner{width:100%;grid-template-columns:1fr;}
+  .footer-inner > div{min-width:0 !important;width:100%;max-width:100% !important;}
+  img,video,iframe{max-width:100%;}
+}
+</style>
 </head>
 <body>
 
